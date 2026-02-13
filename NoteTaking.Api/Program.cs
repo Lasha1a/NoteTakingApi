@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NoteTaking.Api.Common.models;
 using NoteTaking.Api.Features.Auth;
+using NoteTaking.Api.Features.Notes;
 using NoteTaking.Api.Infrastructure.Data;
 using Scalar.AspNetCore;
 using System.Text;
@@ -68,6 +69,7 @@ app.UseAuthorization();
 //map endpoints
 RegisterUser.Map(app);
 LoginUser.Map(app);
+CreateNote.Map(app);
 
 
 app.Run();
