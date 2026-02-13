@@ -7,6 +7,8 @@ namespace NoteTaking.Api.Features.Notes;
 
 public static class CreateNote
 {
+
+    // record types for request and response
     public record Request (
         string Title,
         string? Content,
@@ -17,19 +19,21 @@ public static class CreateNote
         Guid Id
     );
 
+    // endpoint mapping
     public static void Map(IEndpointRouteBuilder app) =>
         app.MapPost("/notes", Handle)
             .RequireAuthorization()
             .WithName(nameof(CreateNote))
             .WithOpenApi();
 
+    // handler method
     static async Task<IResult> Handle(
         Request request,
         AppDbContext db,
         ClaimsPrincipal user,
         CancellationToken ct)
     {
-        var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)
+        var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier) // try to find the claim with type "nameidentifier" first
             ?? user.FindFirst("sub");
 
         if(userIdClaim is null)
@@ -39,7 +43,7 @@ public static class CreateNote
 
         var userId = Guid.Parse(userIdClaim.Value);
 
-        var note = new Note
+        var note = new Note // create a new note 
         {
             Id = Guid.NewGuid(),
             userId = userId,
@@ -51,12 +55,12 @@ public static class CreateNote
 
         if(request.TagIds is not null && request.TagIds.Any())
         {
-            var tags = await db.Tags
+            var tags = await db.Tags // get the tags from the database that match the provided tag IDs
                 .Where(t => request.TagIds.Contains(t.Id))
                 .Select(t => t.Id)
                 .ToListAsync(ct);
 
-            foreach (var tagId in tags)
+            foreach (var tagId in tags) // for each tag ID, create a new NoteTag entry 
             {
                 note.NoteTags.Add(new NoteTag
                 {
@@ -67,7 +71,7 @@ public static class CreateNote
         }
 
         db.Notes.Add(note);
-        await db.SaveChangesAsync(ct);
+        await db.SaveChangesAsync(ct); // save the new note to the database
 
         return Results.Ok(new Response(note.Id));
     }
