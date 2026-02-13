@@ -8,9 +8,23 @@ using NoteTaking.Api.Features.Notes;
 using NoteTaking.Api.Infrastructure.Data;
 using Scalar.AspNetCore;
 using System.Text;
+using Serilog;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+//serilog configuration
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(
+      "logs/log-.txt",
+      rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog(); //use serilog for logging
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
