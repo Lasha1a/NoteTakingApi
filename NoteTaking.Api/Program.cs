@@ -70,7 +70,7 @@ app.UseAuthorization();
 RegisterUser.Map(app);
 LoginUser.Map(app);
 CreateNote.Map(app);
-
+GetMyNotes.Map(app);
 
 app.Run();
 
