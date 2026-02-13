@@ -2,6 +2,7 @@
 using NoteTaking.Api.Common.models;
 using NoteTaking.Api.Infrastructure.Data;
 using System.Security.Claims;
+using Serilog;
 
 namespace NoteTaking.Api.Features.Notes;
 
@@ -72,6 +73,12 @@ public static class CreateNote
 
         db.Notes.Add(note);
         await db.SaveChangesAsync(ct); // save the new note to the database
+
+        Log.Information(
+            "User {UserId} created a new note with ID {NoteId}",
+            userId,
+            note.Id
+        );
 
         return Results.Ok(new Response(note.Id));
     }

@@ -6,6 +6,7 @@ using NoteTaking.Api.Infrastructure.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Serilog;
 
 namespace NoteTaking.Api.Features.Auth;
 
@@ -35,6 +36,7 @@ public static class LoginUser
 
         if (user is null)
         {
+            Log.Warning("Login attempt with non-existing email: {Email}", request.Email);
             return Results.Unauthorized();
         }
 
@@ -72,6 +74,8 @@ public static class LoginUser
         );
 
         var tokenValue = new JwtSecurityTokenHandler().WriteToken(token); //serialize the token to a string
+
+        Log.Information("User {UserId} logged in successfully", user.Id);
 
         return Results.Ok(new Response(tokenValue));
     }
