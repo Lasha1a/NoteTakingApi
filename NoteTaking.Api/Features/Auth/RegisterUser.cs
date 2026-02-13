@@ -17,7 +17,7 @@ public static class RegisterUser
     //endpoint mapping
     public static void Map(IEndpointRouteBuilder app) =>
 
-        app.MapGet("/auth/register", Handle)
+        app.MapPost("/auth/register", Handle)
             .WithName(nameof(RegisterUser))
             .WithOpenApi();
 

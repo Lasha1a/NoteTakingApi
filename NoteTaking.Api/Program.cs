@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using NoteTaking.Api.Common.models;
+using NoteTaking.Api.Features.Auth;
 using NoteTaking.Api.Infrastructure.Data;
 using Scalar.AspNetCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 
@@ -36,6 +38,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+//password hasher for hashing and verifying passwords
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
 builder.Services.AddAuthorization();
 
 // Add services to the container.
@@ -43,6 +50,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddOpenApi("V1");
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -55,6 +64,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//map endpoints
+RegisterUser.Map(app);
+LoginUser.Map(app);
 
 
 app.Run();

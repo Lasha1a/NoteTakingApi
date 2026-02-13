@@ -66,7 +66,7 @@ public static class LoginUser
             audience: jwt["Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(
-                int.Parse(jwt["ExpiresMinutes"]!)
+                int.Parse(jwt["ExpireMinutes"]!)
                 ),
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
         );
