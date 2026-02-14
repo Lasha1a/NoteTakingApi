@@ -41,7 +41,7 @@ public class FilterNotesByTags
                 .ThenInclude(nt => nt.Tag)
             .Where(n =>
                  n.userId == userId &&
-                 !n.IsDeleted &&
+                 n.IsDeleted == "false" &&
                  n.NoteTags.Any(nt => tagNames.Contains(nt.Tag.Name))
             )
             .ToListAsync(ct);
