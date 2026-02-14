@@ -13,7 +13,7 @@ public static class CreateNote
     public record Request (
         string Title,
         string? Content,
-        List<Guid>? TagIds
+        List<string> TagNames
     );
 
     public record Response (
@@ -54,10 +54,10 @@ public static class CreateNote
             CreatedAt = DateTime.UtcNow
         };
 
-        if(request.TagIds is not null && request.TagIds.Any())
+        if(request.TagNames is not null && request.TagNames.Any())
         {
             var tags = await db.Tags // get the tags from the database that match the provided tag IDs
-                .Where(t => request.TagIds.Contains(t.Id))
+                .Where(t => request.TagNames.Contains(t.Name))
                 .Select(t => t.Id)
                 .ToListAsync(ct);
 
