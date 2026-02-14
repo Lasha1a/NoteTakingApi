@@ -87,6 +87,7 @@ CreateNote.Map(app);
 GetMyNotes.Map(app);
 UpdateNote.Map(app);
 DeleteNote.Map(app);
+GetNoteById.Map(app);
 
 app.Run();
 
