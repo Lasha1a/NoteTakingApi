@@ -88,6 +88,7 @@ GetMyNotes.Map(app);
 UpdateNote.Map(app);
 DeleteNote.Map(app);
 GetNoteById.Map(app);
+FilterNotesByTags.Map(app);
 
 app.Run();
 

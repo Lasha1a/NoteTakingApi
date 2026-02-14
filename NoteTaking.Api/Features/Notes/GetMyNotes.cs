@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace NoteTaking.Api.Features.Notes;
 
-public static class GetMyNotes
+public static class GetMyNotes //for paginations and search
 {
     // record type for response
     public record class Response(
