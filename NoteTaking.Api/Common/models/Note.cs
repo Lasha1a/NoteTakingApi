@@ -3,7 +3,7 @@
     public class Note
     {
         public Guid Id { get; set; }
-        public Guid userId { get; set; }
+        public Guid UserId { get; set; }
         public string Title { get; set; } = default!;
         public string? Content { get; set; }
         public string IsDeleted { get; set; }

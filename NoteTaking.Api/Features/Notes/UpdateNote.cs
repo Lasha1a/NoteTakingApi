@@ -35,7 +35,7 @@ public class UpdateNote
 
         //finding note
         var note = await db.Notes
-            .FirstOrDefaultAsync(n => n.Id == id && n.userId == userId, ct);
+            .FirstOrDefaultAsync(n => n.Id == id && n.UserId == userId, ct);
 
         if(note == null)
             return Results.NotFound();

@@ -31,7 +31,7 @@ public class DeleteNote
         var note = await db.Notes // try to find the note with the given id, userId 
             .FirstOrDefaultAsync(n =>
                 n.Id == id &&
-                n.userId == userId &&
+                n.UserId == userId &&
                 n.IsDeleted == "false",
                 ct);
 

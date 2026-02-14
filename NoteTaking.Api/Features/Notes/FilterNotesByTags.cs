@@ -40,7 +40,7 @@ public class FilterNotesByTags
             .Include(n => n.NoteTags)
                 .ThenInclude(nt => nt.Tag)
             .Where(n =>
-                 n.userId == userId &&
+                 n.UserId == userId &&
                  n.IsDeleted == "false" &&
                  n.NoteTags.Any(nt => tagNames.Contains(nt.Tag.Name))
             )

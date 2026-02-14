@@ -41,7 +41,7 @@ public class GetNoteById
         var note = await db.Notes // query the note with the given id, userId and not deleted
             .Where(n =>
                 n.Id == id &&
-                n.userId == userId &&
+                n.UserId == userId &&
                 n.IsDeleted == "false")
             .Select(n => new Response(
                 n.Id,

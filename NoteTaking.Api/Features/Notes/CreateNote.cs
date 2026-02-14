@@ -47,7 +47,7 @@ public static class CreateNote
         var note = new Note // create a new note 
         {
             Id = Guid.NewGuid(),
-            userId = userId,
+            UserId = userId,
             Title = request.Title,
             Content = request.Content,
             IsDeleted = "false",

@@ -37,7 +37,7 @@ public static class GetMyNotes //for paginations and search
 
         //query notes
         var notes = await db.Notes
-            .Where(n => n.userId == userId && n.IsDeleted == "false") // filter notes by user ID and not deleted
+            .Where(n => n.UserId == userId && n.IsDeleted == "false") // filter notes by user ID and not deleted
             .OrderByDescending(n => n.CreatedAt)
             .Select(n => new Response(
                 n.Id,
