@@ -85,6 +85,7 @@ RegisterUser.Map(app);
 LoginUser.Map(app);
 CreateNote.Map(app);
 GetMyNotes.Map(app);
+UpdateNote.Map(app);
 
 app.Run();
 
