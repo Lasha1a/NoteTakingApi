@@ -27,7 +27,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(); //use serilog for logging
 
-
+// connection string and db context configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 

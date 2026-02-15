@@ -21,16 +21,16 @@ public class ExceptionMiddleware
     {
         try
         {
-            await _next(context);
+            await _next(context); // let request continiue if there is no exception
         }
-        catch(Exception ex)
+        catch(Exception ex) // catch any unhandled exception
         {
             _logger.LogError(ex, "An unhandled exception occurred while processing the request.");
 
-            context.Response.ContentType = "application/problem+json";
-            context.Response.StatusCode = ((int)HttpStatusCode.InternalServerError);
+            context.Response.ContentType = "application/problem+json"; // set content type to problem+json for standardized error response
+            context.Response.StatusCode = ((int)HttpStatusCode.InternalServerError); // set status code to 500
 
-            var problem = new
+            var problem = new // create a problem details with information about the error
             {
                 type = "https://httpstatuses.com/500",
                 title = "Internal Server Error",
@@ -39,7 +39,7 @@ public class ExceptionMiddleware
                 instance = context.Request.Path
             };
 
-            await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
+            await context.Response.WriteAsync(JsonSerializer.Serialize(problem)); // write the problem details as json response
         }
     }
 }
