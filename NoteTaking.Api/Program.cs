@@ -94,7 +94,7 @@ app.UseAuthorization();
 
 // Health checks
 app.MapHealthChecks("/health");
-app.MapHealthChecks("/health/db");
+app.MapHealthChecks("/health/db"); //they wont be UI endpoints but we can route them with hand
 
 //map endpoints
 RegisterUser.Map(app);

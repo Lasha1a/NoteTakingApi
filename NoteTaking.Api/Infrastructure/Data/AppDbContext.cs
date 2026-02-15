@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Note> Notes { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<NoteTag> NoteTags { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
