@@ -78,8 +78,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<CorrelationIdMiddleware>(); //correlation id middleware for tracking requests across services
+
 app.UseMiddleware<ExceptionMiddleware>(); //global exception handling middleware
 
+//authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
