@@ -68,6 +68,8 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddScoped<TokenService>(); //token service for generating access and refresh tokens
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi("V1");
 
