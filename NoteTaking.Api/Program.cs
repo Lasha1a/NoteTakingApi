@@ -101,6 +101,7 @@ app.MapHealthChecks("/health/db"); //they wont be UI endpoints but we can route 
 //map endpoints
 RegisterUser.Map(app);
 LoginUser.Map(app);
+RefreshAccessToken.Map(app);
 
 CreateNote.Map(app);
 GetMyNotes.Map(app);
