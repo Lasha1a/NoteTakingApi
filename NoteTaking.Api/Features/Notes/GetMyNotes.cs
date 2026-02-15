@@ -12,7 +12,8 @@ public static class GetMyNotes //for paginations and search
         string Title,
         string? Content,
         DateTime CreatedAt,
-        DateTime? UpdatedAt
+        DateTime? UpdatedAt,
+        List<string> Tags
     );
 
     // endpoint mapping
@@ -37,20 +38,21 @@ public static class GetMyNotes //for paginations and search
 
         //query notes
         var notes = await db.Notes
-            .Where(n => n.UserId == userId && n.IsDeleted == "false") // filter notes by user ID and not deleted
-            .OrderByDescending(n => n.CreatedAt)
+            .Include(n => n.NoteTags)
+                .ThenInclude(nt => nt.Tag)
+            .Where(n => n.UserId == userId && n.IsDeleted != "true")
+            .OrderByDescending(n => n.CreatedAt) // order by created date descending
             .Select(n => new Response(
                 n.Id,
                 n.Title,
                 n.Content,
                 n.CreatedAt,
-                n.UpdatedAt
-            ))
+                n.UpdatedAt,
+                n.NoteTags.Select(nt => nt.Tag.Name).ToList()
+                ))
             .ToListAsync(ct);
 
         return Results.Ok(notes);
 
-
     }
-
 }
