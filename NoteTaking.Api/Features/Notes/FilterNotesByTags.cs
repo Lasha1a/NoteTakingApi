@@ -25,15 +25,21 @@ public class FilterNotesByTags
         AppDbContext db,
         CancellationToken ct)
     {
-        var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!); // get user ID from claims
+        var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)
+            ?? user.FindFirst("sub"); // get userId from claims
+
+        if(userIdClaim is null)
+            return Results.Unauthorized();
+
+        var userId = Guid.Parse(userIdClaim.Value);
+
+        if(string.IsNullOrWhiteSpace(tags))
+            return Results.BadRequest("Tags query parameter is required");
 
         var tagNames = tags //split tags from queries
             .Split(',', StringSplitOptions.RemoveEmptyEntries)
-            .Select(t => t.Trim())
+            .Select(t => t.Trim().ToLower())
             .ToList();
-
-        if (tagNames.Count == 0)
-            return Results.BadRequest("At least one tag is required");
 
 
         var notes = await db.Notes // query notes with the given tags, userId and not deleted
@@ -41,8 +47,8 @@ public class FilterNotesByTags
                 .ThenInclude(nt => nt.Tag)
             .Where(n =>
                  n.UserId == userId &&
-                 n.IsDeleted == "false" &&
-                 n.NoteTags.Any(nt => tagNames.Contains(nt.Tag.Name))
+                 n.IsDeleted != "true" &&
+                 n.NoteTags.Any(nt => tagNames.Contains(nt.Tag.Name.ToLower()))
             )
             .ToListAsync(ct);
 

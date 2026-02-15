@@ -56,17 +56,31 @@ public static class CreateNote
 
         if(request.TagNames is not null && request.TagNames.Any())
         {
-            var tags = await db.Tags // get the tags from the database that match the provided tag IDs
-                .Where(t => request.TagNames.Contains(t.Name))
-                .Select(t => t.Id)
-                .ToListAsync(ct);
-
-            foreach (var tagId in tags) // for each tag ID, create a new NoteTag entry 
+            foreach(var tagName in request.TagNames.Distinct())
             {
+                var normilized = tagName.Trim().ToLower();
+
+                //finding existing tag
+                var tag = await db.Tags.FirstOrDefaultAsync(t => t.Name == normilized, ct);
+
+                //creating tag if its missing
+                if(tag is null)
+                {
+                    tag = new Tag
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = normilized
+                    };
+
+                    db.Tags.Add(tag);
+                }
+
+                //junction row
                 note.NoteTags.Add(new NoteTag
                 {
                     NoteId = note.Id,
-                    TagId = tagId
+                    TagId = tag.Id,
+                    Tag = tag
                 });
             }
         }
@@ -75,9 +89,10 @@ public static class CreateNote
         await db.SaveChangesAsync(ct); // save the new note to the database
 
         Log.Information(
-            "User {UserId} created a new note with ID {NoteId}",
+            "User {UserId} created note {NoteId} with tags {@Tags}",
             userId,
-            note.Id
+            note.Id,
+            request.TagNames
         );
 
         return Results.Ok(new Response(note.Id));
