@@ -27,9 +27,16 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(); //use serilog for logging
 
-// connection string and db context configuration
+// connection string 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// health checks for monitoring the health of the application and its dependencies
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>(
+        name: "postgres-db",
+        failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy
+    );
 
 
 // jwt authentication
@@ -61,7 +68,6 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddAuthorization();
 
-// Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi("V1");
 
@@ -85,6 +91,10 @@ app.UseMiddleware<ExceptionMiddleware>(); //global exception handling middleware
 //authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Health checks
+app.MapHealthChecks("/health");
+app.MapHealthChecks("/health/db");
 
 //map endpoints
 RegisterUser.Map(app);
