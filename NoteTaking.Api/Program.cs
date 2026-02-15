@@ -9,6 +9,7 @@ using NoteTaking.Api.Infrastructure.Data;
 using Scalar.AspNetCore;
 using System.Text;
 using Serilog;
+using NoteTaking.Api.Infrastructure.Middleware; // for global exception handling middleware
 
 
 
@@ -77,17 +78,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>(); //global exception handling middleware
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 //map endpoints
 RegisterUser.Map(app);
 LoginUser.Map(app);
+
 CreateNote.Map(app);
 GetMyNotes.Map(app);
 UpdateNote.Map(app);
 DeleteNote.Map(app);
 GetNoteById.Map(app);
+
 FilterNotesByTags.Map(app);
 
 app.Run();
